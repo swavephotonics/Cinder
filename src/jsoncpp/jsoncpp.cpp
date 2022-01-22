@@ -1522,8 +1522,8 @@ namespace Json {
 #define ALIGNAS(byte_alignment)
 #endif
 static const unsigned char ALIGNAS(8) kNull[sizeof(Value)] = { 0 };
-const unsigned char& kNullRef = kNull[0];
-const Value& Value::null = reinterpret_cast<const Value&>(kNullRef);
+//const unsigned char& kNullRef = kNull[0];
+//const Value& Value::null = reinterpret_cast<const Value&>(kNullRef);
 
 const Int Value::minInt = Int(~(UInt(-1) / 2));
 const Int Value::maxInt = Int(UInt(-1) / 2);
@@ -2960,10 +2960,10 @@ const Value& Path::resolve(const Value& root) const {
         // Error: unable to resolve path (object value expected at position...)
       }
       node = &((*node)[arg.key_]);
-      if (node == &Value::null) {
+      //if (node == &Value::null) {
         // Error: unable to resolve path (object has no member named '' at
         // position...)
-      }
+      //}
     }
   }
   return *node;
@@ -2981,8 +2981,8 @@ Value Path::resolve(const Value& root, const Value& defaultValue) const {
       if (!node->isObject())
         return defaultValue;
       node = &((*node)[arg.key_]);
-      if (node == &Value::null)
-        return defaultValue;
+      //if (node == &Value::null)
+        //return defaultValue;
     }
   }
   return *node;
