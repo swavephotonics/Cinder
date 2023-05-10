@@ -38,6 +38,7 @@
 #include <limits.h>
 #include <pwd.h>
 #include <pthread.h>
+#include <array>
 
 namespace cinder {
 
