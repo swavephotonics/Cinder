@@ -363,6 +363,34 @@ void draw( const Shape2d &shape, float approximationScale )
 		gl::draw( path, approximationScale );
 }
 
+void draw( const PolyLine2d &polyLine )
+{
+	auto ctx = context();
+	const GlslProg* curGlslProg = ctx->getGlslProg();
+	if( ! curGlslProg ) {
+		CI_LOG_E( "No GLSL program bound" );
+		return;
+	}
+
+	const vector<dvec2> &points = polyLine.getPoints();
+	VboRef arrayVbo = ctx->getDefaultArrayVbo( sizeof(dvec2) * points.size() );
+	arrayVbo->bufferSubData( 0, sizeof(dvec2) * points.size(), points.data() );
+
+	ctx->pushVao();
+	ctx->getDefaultVao()->replacementBindBegin();
+	ScopedBuffer bufferBindScp( arrayVbo );
+	int posLoc = curGlslProg->getAttribSemanticLocation( geom::Attrib::POSITION );
+	if( posLoc >= 0 ) {
+		enableVertexAttribArray( posLoc );
+		vertexAttribPointer( posLoc, 2, GL_DOUBLE, GL_FALSE, 0, (const GLvoid*)nullptr );
+	}
+
+	ctx->getDefaultVao()->replacementBindEnd();
+	ctx->setDefaultShaderVars();
+	ctx->drawArrays( ( polyLine.isClosed() ) ? GL_LINE_LOOP : GL_LINE_STRIP, 0, (GLsizei)points.size() );
+	ctx->popVao();
+}
+
 void draw( const PolyLine2 &polyLine )
 {
 	auto ctx = context();
