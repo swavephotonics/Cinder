@@ -100,6 +100,9 @@ endif()
 # Prevent gcc and clang adding -std=gnu++XX instead of -stdc++XX
 set_target_properties(cinder PROPERTIES CXX_EXTENSIONS OFF)
 target_compile_features(cinder PUBLIC cxx_std_14)
+if( NOT MSVC )
+	set( CINDER_CXX_FLAGS "-U linux" )
+endif()
 
 # TODO: it would be nice to the following, but we can't until min required cmake is 3.3
 #target_compile_options( cinder PUBLIC $<$<COMPILE_LANGUAGE:CXX>:${CINDER_CXX_FLAGS}> )
